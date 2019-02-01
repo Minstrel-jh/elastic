@@ -16,7 +16,7 @@ POST hello/doc/1
   "score": 70
 }
 
-# 查询
+# 查看数据
 GET hello/doc/1
 
 # 修改数据
@@ -137,22 +137,10 @@ PUT hello/doc/_mapping
 {
   "properties": {
     "user": {
-      "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword",
-          "ignore_above": 256
-        }
-      }
+      "type": "keyword"
     },
     "subject": {
-      "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword",
-          "ignore_above": 256
-        }
-      }
+      "type": "keyword"
     },
     "uid": {
       "type": "long"
@@ -171,11 +159,11 @@ POST _bulk
 {"index": {"_index": "hello", "_type": "doc"}}
 {"user": "david","subject": "Java", "uid": 3, "score": 90}
 {"index": {"_index": "hello", "_type": "doc"}}
-{"user": "nancy","subject": "Java","uid": 1,"score": 60}
+{"user": "nancy","subject": "Java","uid": 4,"score": 60}
 {"index": {"_index": "hello", "_type": "doc"}}
-{"user": "john","subject": "Java", "uid": 2, "score": 100}
+{"user": "john","subject": "Java", "uid": 5, "score": 100}
 {"index": {"_index": "hello", "_type": "doc"}}
-{"user": "mike","subject": "Java", "uid": 3, "score": 95}
+{"user": "mike","subject": "Java", "uid": 6, "score": 95}
 {"index": {"_index": "hello", "_type": "doc"}}
 {"user": "jack","subject": "c","uid": 1,"score": 85}
 {"index": {"_index": "hello", "_type": "doc"}}
@@ -183,11 +171,11 @@ POST _bulk
 {"index": {"_index": "hello", "_type": "doc"}}
 {"user": "david","subject": "c", "uid": 3, "score": 70}
 {"index": {"_index": "hello", "_type": "doc"}}
-{"user": "nancy","subject": "c","uid": 1,"score": 50}
+{"user": "nancy","subject": "c","uid": 4,"score": 50}
 {"index": {"_index": "hello", "_type": "doc"}}
-{"user": "john","subject": "c", "uid": 2, "score": 95}
+{"user": "john","subject": "c", "uid": 5, "score": 95}
 {"index": {"_index": "hello", "_type": "doc"}}
-{"user": "mike","subject": "c", "uid": 3, "score": 80}
+{"user": "mike","subject": "c", "uid": 6, "score": 80}
 
 GET hello/_search
 
@@ -218,3 +206,57 @@ GET hello/_search
   ]
 }
 
+# range聚合
+# to 为开区间
+GET hello/_search
+{
+  "query": {
+    "match": {
+      "subject": "Java"
+    }
+  }, 
+  "size": 20, 
+  "aggs": {
+    "by_score": {
+      "range": {
+        "field": "score",
+        "ranges": [
+          {
+            "from": 0,
+            "to": 60
+          }, {
+            "from": 60,
+            "to": 80
+          }, {
+            "from": 80,
+            "to": 90
+          }, {
+            "from": 90,
+            "to": 101
+          }
+        ],
+      }
+    }
+  }
+}
+
+# terms聚合
+GET hello/_search
+{
+  "size": 0, 
+  "aggs": {
+    "by_subject": {
+      "terms": {
+        "field": "user",
+        "size": 6
+      },
+      "aggs": {
+        "sum_score": {
+          "sum": {
+            "field": "score"
+          }
+        }
+      }
+    }
+  }
+}
