@@ -47,7 +47,7 @@ http://192.168.2.101:9200/_cat/health
 ```
 
 #### 3. kibana
-* 配置elas
+* 配置
 ```
 vim ${KIBANA_PATH}/config/kibana.yml
 # 设置网络
