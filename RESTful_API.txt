@@ -122,6 +122,7 @@ GET hello/_count
   }
 }
 
+###############################################
 # 查看mapping(index的结构)
 GET hello/_mapping
 
@@ -130,5 +131,90 @@ DELETE hello
 PUT hello
 {
   "settings": {"number_of_shards": 1}
+}
+
+PUT hello/doc/_mapping
+{
+  "properties": {
+    "user": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "subject": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "uid": {
+      "type": "long"
+    },
+    "score": {
+      "type": "long"
+    }
+  }
+}
+
+POST _bulk
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "jack","subject": "Java","uid": 1,"score": 80}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "tom","subject": "Java", "uid": 2, "score": 70}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "david","subject": "Java", "uid": 3, "score": 90}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "nancy","subject": "Java","uid": 1,"score": 60}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "john","subject": "Java", "uid": 2, "score": 100}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "mike","subject": "Java", "uid": 3, "score": 95}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "jack","subject": "c","uid": 1,"score": 85}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "tom","subject": "c", "uid": 2, "score": 65}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "david","subject": "c", "uid": 3, "score": 70}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "nancy","subject": "c","uid": 1,"score": 50}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "john","subject": "c", "uid": 2, "score": 95}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "mike","subject": "c", "uid": 3, "score": 80}
+
+GET hello/_search
+
+# 范围 排序
+GET hello/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"match": {
+          "subject": "Java"
+        }},
+        {"range": {
+          "score": {
+            "gte": 80,
+            "lte": 100
+          }
+        }}
+      ]
+    }
+  },
+  "sort": [
+    {
+      "score": {
+        "order": "desc"
+      }
+    }
+  ]
 }
 
