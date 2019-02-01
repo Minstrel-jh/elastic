@@ -1,0 +1,134 @@
+# 使用kibana的Dev Tools里的Console来操作你的elas
+GET /_cat/health
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+# 插入数据
+# 格式: 索引/类型/id
+POST hello/doc/1
+{
+  "user": "jack",
+  "uid": 1,
+  "score": 70
+}
+
+# 查询
+GET hello/doc/1
+
+# 修改数据
+PUT hello/doc/1
+{
+  "user": "jack",
+  "uid": 1,
+  "score": 75
+}
+
+# 删除数据
+DELETE hello/doc/1
+
+# 添加数据
+# 不加id的话，会自动生成id
+POST hello/doc/
+{
+  "user": "jack",
+  "uid": 1,
+  "score": 70
+}
+
+# 检索
+GET hello/_search
+
+# 删除索引
+DELETE hello
+
+# 批量插入
+POST _bulk
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "jack", "uid": 1, "score": 70}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "tom", "uid": 2, "score": 80}
+{"index": {"_index": "hello", "_type": "doc"}}
+{"user": "david", "uid": 3, "score": 90}
+
+# 查询
+GET hello/_search
+{
+  "query": {
+    "match": {
+      "user": "david"
+    }
+  }
+}
+
+# 查询 条件 and
+GET hello/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"match": {"user": "david"}},
+        {"match": {"uid": 3}}
+      ]
+    }
+  }
+}
+
+# 查询 条件 not
+GET hello/_search
+{
+  "query": {
+    "bool": {
+      "must_not": [
+        {"match": {
+          "user": "david"
+        }}
+      ]
+    }
+  }
+}
+
+# 查询 条件 or
+GET hello/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {"match": {
+          "user": "jack"
+        }},
+        {"match": {
+          "user": "tom"
+        }}
+      ]
+    }
+  }
+}
+
+# 计数
+GET hello/_count
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"match": {
+          "user": "tom"
+        }}
+      ]
+    }
+  }
+}
+
+# 查看mapping(index的结构)
+GET hello/_mapping
+
+# 自定义一个索引
+DELETE hello
+PUT hello
+{
+  "settings": {"number_of_shards": 1}
+}
+
