@@ -260,3 +260,35 @@ GET hello/_search
     }
   }
 }
+
+# COUNT(DISTINCT)
+GET hello/_search
+{
+  "size": 0, 
+  "aggs": {
+    "car_user": {
+      "cardinality": {
+        "field": "user"
+      }
+    }
+  }
+}
+
+###############################################
+# sql
+POST /_xpack/sql?format=txt
+{
+  "query": "SELECT * FROM hello"
+}
+
+POST /_xpack/sql?format=txt
+{
+  "query": "SELECT count(DISTINCT user) FROM hello"
+}
+
+# 将sql查询翻译成普通的查询
+POST /_xpack/sql/translate
+{
+  "query": "SELECT count(DISTINCT user) FROM hello"
+}
+
