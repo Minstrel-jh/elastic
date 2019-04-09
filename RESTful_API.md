@@ -1,12 +1,18 @@
+```json
 # 使用kibana的Dev Tools里的Console来操作你的elas
 GET /_cat/health
+```
+
+```json
 GET _search
 {
   "query": {
     "match_all": {}
   }
 }
+```
 
+```json
 # 插入数据
 # 格式: 索引/类型/id
 POST hello/doc/1
@@ -15,10 +21,14 @@ POST hello/doc/1
   "uid": 1,
   "score": 70
 }
+```
 
+```json
 # 查看数据
 GET hello/doc/1
+```
 
+```json
 # 修改数据
 PUT hello/doc/1
 {
@@ -26,10 +36,14 @@ PUT hello/doc/1
   "uid": 1,
   "score": 75
 }
+```
 
+```json
 # 删除数据
 DELETE hello/doc/1
+```
 
+```json
 # 添加数据
 # 不加id的话，会自动生成id
 POST hello/doc/
@@ -38,13 +52,19 @@ POST hello/doc/
   "uid": 1,
   "score": 70
 }
+```
 
+```json
 # 检索
 GET hello/_search
+```
 
+```json
 # 删除索引
 DELETE hello
+```
 
+```json
 # 批量插入
 POST _bulk
 {"index": {"_index": "hello", "_type": "doc"}}
@@ -53,7 +73,9 @@ POST _bulk
 {"user": "tom", "uid": 2, "score": 80}
 {"index": {"_index": "hello", "_type": "doc"}}
 {"user": "david", "uid": 3, "score": 90}
+```
 
+```json
 # 查询
 GET hello/_search
 {
@@ -63,7 +85,9 @@ GET hello/_search
     }
   }
 }
+```
 
+```json
 # 查询 条件 and
 GET hello/_search
 {
@@ -76,7 +100,9 @@ GET hello/_search
     }
   }
 }
+```
 
+```json
 # 查询 条件 not
 GET hello/_search
 {
@@ -90,7 +116,9 @@ GET hello/_search
     }
   }
 }
+```
 
+```json
 # 查询 条件 or
 GET hello/_search
 {
@@ -107,7 +135,9 @@ GET hello/_search
     }
   }
 }
+```
 
+```json
 # 计数
 GET hello/_count
 {
@@ -121,18 +151,23 @@ GET hello/_count
     }
   }
 }
+```
 
-###############################################
+```json
 # 查看mapping(index的结构)
 GET hello/_mapping
+```
 
+```json
 # 自定义一个索引
 DELETE hello
 PUT hello
 {
   "settings": {"number_of_shards": 1}
 }
+```
 
+```json
 PUT hello/doc/_mapping
 {
   "properties": {
@@ -150,7 +185,9 @@ PUT hello/doc/_mapping
     }
   }
 }
+```
 
+```json
 POST _bulk
 {"index": {"_index": "hello", "_type": "doc"}}
 {"user": "jack","subject": "Java","uid": 1,"score": 80}
@@ -176,9 +213,13 @@ POST _bulk
 {"user": "john","subject": "c", "uid": 5, "score": 95}
 {"index": {"_index": "hello", "_type": "doc"}}
 {"user": "mike","subject": "c", "uid": 6, "score": 80}
+```
 
+```json
 GET hello/_search
+```
 
+```json
 # 范围 排序
 GET hello/_search
 {
@@ -205,7 +246,9 @@ GET hello/_search
     }
   ]
 }
+```
 
+```json
 # range聚合
 # to 为开区间
 GET hello/_search
@@ -239,7 +282,9 @@ GET hello/_search
     }
   }
 }
+```
 
+```json
 # terms聚合
 GET hello/_search
 {
@@ -260,7 +305,9 @@ GET hello/_search
     }
   }
 }
+```
 
+```json
 # COUNT(DISTINCT)
 GET hello/_search
 {
@@ -273,22 +320,27 @@ GET hello/_search
     }
   }
 }
+```
 
-###############################################
+```json
 # sql
 POST /_xpack/sql?format=txt
 {
   "query": "SELECT * FROM hello"
 }
+```
 
+```json
 POST /_xpack/sql?format=txt
 {
   "query": "SELECT count(DISTINCT user) FROM hello"
 }
+```
 
+```json
 # 将sql查询翻译成普通的查询
 POST /_xpack/sql/translate
 {
   "query": "SELECT count(DISTINCT user) FROM hello"
 }
-
+```
