@@ -1,5 +1,7 @@
+# date_range 使用
+
 ```json
-GET slg4tg-000001/log/_search
+// GET slg4tg-000001/log/_search
 {
   "query": {
     "bool": {
